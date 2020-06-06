@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 var axios = require('axios')
 axios.defaults.baseURL = 'http://15820714680.qicp.vip/api'
@@ -10,6 +12,8 @@ axios.defaults.baseURL = 'http://15820714680.qicp.vip/api'
 Vue.prototype.$axios = axios
 
 Vue.config.productionTip = false
+
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({

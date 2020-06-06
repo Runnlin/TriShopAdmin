@@ -1,3 +1,4 @@
+// 商城首页
 <template>
     <div>
       Hello World!
@@ -6,7 +7,7 @@
 
 <script>
   export default {
-    name: 'AppIndex'
+    name: 'ProductIndex'
   }
 </script>
 
