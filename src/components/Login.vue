@@ -29,8 +29,8 @@
     data () {
       return {
         loginForm: {
-          account: '',
-          password: ''
+          account: 'admin',
+          password: 'admin'
         },
         responseResult: []
       }
@@ -38,6 +38,7 @@
     methods: {
         // 登录
       login () {
+        var _this = this
         this.$axios
           .post('/user/login', {
             account: this.loginForm.account,
@@ -45,10 +46,19 @@
           })
           .then(successResponse => {
             if (successResponse.data.code === 200) {
-              this.$router.replace({path: '/index'})
+              // 把登录信息发给store
+              _this.$store.commit('login', successResponse.data.resultString)
+              var path = this.$route.query.redirects
+              this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
+            } else {
+              alert(successResponse.data.resultString)
+              this.loginForm.account = ''
+              this.loginForm.password = ''
             }
+            console.log(this.$store.state)
           })
           .catch(failResponse => {
+            console.log("登录发生错误: "+ failResponse)
           })
       },
         // 忘记密码
@@ -56,8 +66,10 @@
         this.$axios
             .post('/user/forget?account='+this.loginForm.account)
             .then(successResponse => {
-                if (successResponse.data.id !== 0) {
-                    alert("账号信息为 \n"+successResponse.data)
+                if (successResponse.data.code === 200) {
+                  alert("您的密码为 \n"+successResponse.data.resultString)
+                } else {
+                  alert(successResponse.data.resultString)
                 }
             })
             .catch(failResponse => {})

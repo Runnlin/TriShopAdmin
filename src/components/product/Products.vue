@@ -1,0 +1,160 @@
+<template>
+  <div>
+    <el-row style="height: 840px;">
+      <search-bar @onSearch="searchResult" ref="searchBar"></search-bar>
+      <el-tooltip effect="light" placement="right"
+        v-for="item in products" :key="item.id">
+        <p slot="content" style="font-size: 14px;margin-bottom: 6px;">{{item.name}}</p>
+        <p slot="content" style="font-size: 13px;margin-bottom: 6px">
+          <span>售价：{{item.fee}}</span><br>
+          <span>销量：{{item.sales}}</span><br>
+          <span>剩余库存：{{item.productDetail.quantity}}</span>
+        </p>
+        <el-card style="width: 145px;margin-bottom: 20px;float: left;margin-right: 15px" class="product"
+                 bodyStyle="padding:10px" shadow="hover">
+          <div class="cover"  @click="editProduct(item)">
+            <img :src="item.photoUrl" alt="图片">
+          </div>
+          <div class="info">
+            <div class="title">
+              <a href="">{{item.name}}</a>
+            </div>
+          </div>
+          <div class="fee">￥{{item.fee}}</div>
+          <i class="el-icon-delete" style="color:red" @click="deleteProduct(item.id)"></i>
+        </el-card>
+      </el-tooltip>
+      <EditForm @onSubmit="loadProducts()" ref="edit"></EditForm>
+    </el-row>
+    <el-row>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pagesize"
+        :total="products.length">
+      </el-pagination>
+    </el-row>
+  </div>
+</template>
+
+<script>
+import EditForm from './EditForm'
+import SearchBar from './SearchBar'
+
+export default {
+  name: 'Products',
+  components: {EditForm, SearchBar},
+  data () {
+    return {
+      products: [],
+      currentPage: 1,
+      pagesize: 20
+    }
+  },
+  mounted: function () {
+    this.loadProducts()
+  },
+  methods: {
+    loadProducts () {
+      var _this = this
+      this.$axios.get('/products').then(resp => {
+        if(resp && resp.status === 200) {
+          _this.products = resp.data
+        }
+      })
+    },
+    handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage
+      console.log(this.currentPage)
+    },
+    searchResult () {
+      var _this = this
+      this.$axios
+        .get('/product/search?keywords='+this.$refs.searchBar.keywords, {
+        }).then(resp => {
+          if(resp && resp.status === 200) {
+            _this.products = resp.data
+            _this.currentPage = 1
+          }
+        })
+    },
+    deleteProduct (id) {
+      var _this = this
+      this.$confirm('这会永久删除本商品，确定吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios
+        .get('/product/delete?id='+id)
+        .then(resp => {
+          if(resp && resp.status === 200) {
+            loadProducts()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: "已取消删除"
+        })
+      })
+      
+    },
+    editProduct (item) {
+      this.$refs.edit.dialogFormVisible = true
+      this.$refs.edit.form = {
+        name: item.name,
+        photoUrl: item.photoUrl,
+        introduction: item.introduction,
+        swipe: item.productDetail.swipeList,
+        fee: item.fee,
+        quantity: item.productDetail.quantity,
+        type: item.type
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+  .cover {
+    align-content: center;
+    margin-bottom: 7px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  img {
+    width: 115px;
+    height: 172px;
+    margin: 0 auto;
+  }
+
+  .title {
+    font-size: 14px;
+    text-align: center;
+    left: 0;
+    right: 0;
+  }
+
+  .fee {
+    color: #333;
+    width: 102px;
+    font-size: 13px;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .abstract {
+    display: block;
+    line-height: 17px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:link, a:visited, a:focus {
+    color: #3377aa;
+  }
+</style>
