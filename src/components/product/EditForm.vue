@@ -11,22 +11,23 @@
       </el-form-item>
       <el-form-item label="商品封面图" :label-width="formLabelWidth" prop="photo_url">
         <el-input v-model="form.photoUrl" autocomplete="off" placeholder="图片 URL"></el-input>
-        <img-upload @onUpload="uploadImg" ref="imgUpload"></img-upload>
+        <!-- <img-upload @onUpload="uploadImg" ref="imgUpload"></img-upload> -->
       </el-form-item>
       <el-form-item label="商品介绍" :label-width="formLabelWidth" prop="introduction">
         <el-input type="textarea"  v-model="form.introduction" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="商品轮播图" :label-width="formLabelWidth" prop="swipe">
-        <el-input type="textarea"  v-model="form.swipe" autocomplete="off"></el-input>
+        <el-input type="textarea"  v-model="form.swipes" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="商品售价" :label-width="formLabelWidth" prop="fee">
-        <el-input v-model="form.fee" autocomplete="off"></el-input>
+        <el-input v-model="form.fee" autocomplete="off" placeholder="不可为0元"></el-input>
       </el-form-item>
       <el-form-item label="商品库存" :label-width="formLabelWidth" prop="quantity">
         <el-input v-model="form.quantity" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="商品分类" :label-width="formLabelWidth" prop="type">
         <el-select v-model="form.type" placeholder="选择分类">
+          <el-option label="其他" value="0"></el-option>
           <el-option label="手机" value="1"></el-option>
           <el-option label="运动" value="2"></el-option>
           <el-option label="零食" value="3"></el-option>
@@ -57,10 +58,10 @@ export default {
         name: '',
         photoUrl: '',
         introduction: '',
-        swipe: '',
+        swipes: '',
         fee: '',
         quantity: '',
-        type: ''
+        type: '0'
       },
       formLabelWidth: '120px'
     }
@@ -71,19 +72,20 @@ export default {
         name: '',
         photoUrl: '',
         introduction: '',
-        swipe: '',
+        swipes: '',
         fee: '',
         quantity: '',
-        type: ''
+        type: '0'
       }
     },
     onSubmit () {
       this.$axios
         .post('/product/add', {
+          id: this.form.id,
           name: this.form.name,
           photoUrl: this.form.photoUrl,
-          introduction: this.form.introduction.replace("\"","\'").replace("\n",""),
-          swipe: this.form.swipe.replace("\"","\'").replace("\n",""),
+          introduction: this.form.introduction,
+          swipes: this.form.swipes,
           fee: this.form.fee,
           quantity: this.form.quantity,
           type: this.form.type

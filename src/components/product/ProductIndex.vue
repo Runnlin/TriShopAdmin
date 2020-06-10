@@ -22,7 +22,7 @@
       listByType () {
         var _this = this
         var type = this.$refs.sideMenu.id
-        var url = 'product/search?keywords='+type
+        var url = '/product/types?types='+type
         this.$axios.get(url).then(resp => {
           _this.$refs.productArea.products = resp.data
           _this.$refs.productArea.currentPage = 1

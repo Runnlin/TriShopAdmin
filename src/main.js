@@ -8,7 +8,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 var axios = require('axios')
-axios.defaults.baseURL = 'http://15820714680.qicp.vip/api'
+axios.defaults.baseURL = 'http://localhost:8443/api'
 
 Vue.prototype.$axios = axios
 
@@ -32,7 +32,7 @@ new Vue({
 router.beforeEach((to, from, next) => {
   // 判断访问的路径是否需要登录，已经登录才能next，否则回到login
   if (to.meta.requireAuth) {
-    if (store.state.user.account) {
+    if (store.state.user) {
       next()
     } else {
       console.log("没有登录")

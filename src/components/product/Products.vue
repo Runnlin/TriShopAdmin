@@ -8,17 +8,15 @@
         <p slot="content" style="font-size: 13px;margin-bottom: 6px">
           <span>售价：{{item.fee}}</span><br>
           <span>销量：{{item.sales}}</span><br>
-          <span>剩余库存：{{item.productDetail.quantity}}</span>
+          <span>剩余库存：{{item.quantity}}</span>
         </p>
         <el-card style="width: 145px;margin-bottom: 20px;float: left;margin-right: 15px" class="product"
                  bodyStyle="padding:10px" shadow="hover">
-          <div class="cover"  @click="editProduct(item)">
+          <div class="cover" @click="editProduct(item)">
             <img :src="item.photoUrl" alt="图片">
           </div>
           <div class="info">
-            <div class="title">
-              <a href="">{{item.name}}</a>
-            </div>
+            <div class="title">{{item.name}}</div>
           </div>
           <div class="fee">￥{{item.fee}}</div>
           <i class="el-icon-delete" style="color:red" @click="deleteProduct(item.id)"></i>
@@ -89,7 +87,7 @@ export default {
         .get('/product/delete?id='+id)
         .then(resp => {
           if(resp && resp.status === 200) {
-            loadProducts()
+            this.loadProducts()
           }
         })
       }).catch(() => {
@@ -103,12 +101,13 @@ export default {
     editProduct (item) {
       this.$refs.edit.dialogFormVisible = true
       this.$refs.edit.form = {
+        id: item.id,
         name: item.name,
         photoUrl: item.photoUrl,
         introduction: item.introduction,
-        swipe: item.productDetail.swipeList,
+        swipes: item.swipes,
         fee: item.fee,
-        quantity: item.productDetail.quantity,
+        quantity: item.quantity,
         type: item.type
       }
     }
@@ -143,6 +142,8 @@ export default {
     font-size: 13px;
     margin-bottom: 6px;
     text-align: center;
+    left: 0;
+    right: 0;
   }
 
   .abstract {
