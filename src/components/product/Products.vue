@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row style="height: 840px;">
+    <el-row >
       <search-bar @onSearch="searchResult" ref="searchBar"></search-bar>
       <el-tooltip effect="light" placement="right"
         v-for="item in products" :key="item.id">
@@ -27,8 +27,11 @@
     <el-row>
       <el-pagination
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-size="pagesize"
+        :current-page='1'
+        :page-size='20'
+        layout="total, prev, pager, next"
+        
+        :pager-count="11"
         :total="products.length">
       </el-pagination>
     </el-row>
@@ -44,9 +47,7 @@ export default {
   components: {EditForm, SearchBar},
   data () {
     return {
-      products: [],
-      currentPage: 1,
-      pagesize: 20
+      products: []
     }
   },
   mounted: function () {
@@ -118,22 +119,24 @@ export default {
 <style scoped>
   .cover {
     align-content: center;
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     overflow: hidden;
     cursor: pointer;
   }
 
   img {
     width: 115px;
-    height: 172px;
-    margin: 0 auto;
+    height: 170px;
   }
 
   .title {
     font-size: 14px;
-    text-align: center;
-    left: 0;
-    right: 0;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    padding: 5px;
   }
 
   .fee {

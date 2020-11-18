@@ -1,7 +1,7 @@
 // 商品管理
 <template>
   <el-container>
-    <el-aside style="width: 200px;margin-top: 20px">
+    <el-aside style="width: 220px;margin-top: 20px">
       <switch></switch>
       <SideMenu @indexSelect="listByType" ref="sideMenu"></SideMenu>
     </el-aside>
@@ -33,8 +33,7 @@
 </script>
 
 <style scoped>
-  .books-area {
-    width: 990px;
+  .products-area {
     margin-left: auto;
     margin-right: auto;
   }
